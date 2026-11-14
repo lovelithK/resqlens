@@ -1,0 +1,48 @@
+# Production-like stack on one machine: MySQL 8.4 + ResQLens.
+#   cd deployment
+#   copy env.production.example .env.production   (fill in the secrets)
+#   docker compose --env-file .env.production up -d --build
+# App: http://localhost:8000   Docs: http://localhost:8000/docs
+# MySQL is NOT published to the host network - only the app container can reach it.
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME:-resqlens_db}
+      MYSQL_USER: ${DB_USER:-resqlens_app}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ENV: production
+      SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY}
+      DB_ENGINE: mysql
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: ${DB_NAME:-resqlens_db}
+      DB_USER: ${DB_USER:-resqlens_app}
+      DB_PASSWORD: ${DB_PASSWORD}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8000}
+      SEED_DEMO: ${SEED_DEMO:-0}
+    ports:
+      - "8000:8000"
+
+volumes:
+  mysql_data:

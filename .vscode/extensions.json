@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.debugpy",
+    "dsznajder.es7-react-js-snippets",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-mysql",
+    "eamodio.gitlens",
+    "humao.rest-client",
+    "bierner.markdown-mermaid"
+  ],
+  "unwantedRecommendations": ["bradlc.vscode-tailwindcss"]
+}

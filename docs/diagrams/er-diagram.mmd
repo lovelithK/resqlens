@@ -1,0 +1,22 @@
+erDiagram
+  users ||--o{ user_sessions : has
+  users ||--o{ projects : owns
+  projects ||--o{ system_components : contains
+  projects ||--o{ dependencies : contains
+  system_components ||--o{ dependencies : "source (dependent)"
+  system_components ||--o{ dependencies : "target (dependency)"
+  system_components |o--o{ dependencies : "fallback (backup)"
+  projects ||--o{ functionalities : defines
+  functionalities ||--o{ functionality_components : requires
+  system_components ||--o{ functionality_components : "required by"
+  projects ||--o{ scenarios : stores
+  projects ||--o{ simulations : runs
+  simulations ||--o{ failure_events : injects
+  simulations ||--o{ simulation_results : produces
+  simulations ||--o{ recovery_plans : has
+  recovery_strategies ||--o{ recovery_plans : "used by"
+  recovery_plans ||--o{ recovery_actions : sequences
+  projects ||--o{ event_logs : records
+  simulations |o--o{ event_logs : timeline
+  projects ||--o{ resilience_reports : snapshots
+  projects ||--o{ command_log : "command history"

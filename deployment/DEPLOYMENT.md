@@ -1,0 +1,54 @@
+# Deploying ResQLens
+
+> Nothing is deployed until you choose a host and approve any costs. Never expose your laptop's MySQL to the internet. A public deployment uses a **hosted** MySQL database.
+
+## Production architecture
+- **One web service** runs uvicorn. It serves the REST API (`/api/*`), the docs (`/docs`) and the built React app from the same origin, so no CORS setup is needed for the UI.
+- **Managed MySQL** (TLS enabled) holds the data. Tables are created automatically on first start (`CREATE TABLE IF NOT EXISTS`, which never drops data).
+- **Health check:** `GET /api/health` returns 200 with the database engine and version.
+- **Configuration** comes only from environment variables:
+
+  | Variable | Value |
+  |---|---|
+  | `APP_ENV` | `production` (the app refuses to start without `SECRET_KEY`) |
+  | `SEED_DEMO` | `0` |
+  | `DB_*` | database connection settings |
+  | `DB_SSL` | `1` |
+  | `SECRET_KEY` | a long random string |
+
+## Option A – Docker Compose on a server or VM (app + MySQL together)
+```bash
+cd deployment
+cp env.production.example .env.production   # fill in SECRET_KEY, MYSQL_ROOT_PASSWORD, DB_PASSWORD, CORS_ORIGINS
+docker compose --env-file .env.production up -d --build
+curl http://localhost:8000/api/health
+```
+MySQL is only reachable from the app container, and its data lives in the `mysql_data` volume. Put a reverse proxy (Caddy or Nginx) with HTTPS in front of port 8000.
+
+## Option B – Free-tier PaaS (good for a demo)
+| Piece | Suggested provider | Free-tier limits (checked Nov 2026; verify before you sign up) |
+|---|---|---|
+| Web service (Docker) | **Render** | Free web services spin down after 15 idle minutes and take about a minute to wake. 750 free instance hours per month. Ephemeral filesystem, so never use SQLite there. |
+| MySQL | **Aiven for MySQL** (free plan) | Single node, 1 vCPU, 1 GB RAM, **1 GB storage**. No credit card. TLS is required (`DB_SSL=1`, optionally `DB_SSL_CA` = the downloaded `ca.pem`). |
+| MySQL (alternative) | **TiDB Cloud Starter** | MySQL-compatible serverless. Each of up to five instances gets 5 GiB row storage and 50M Request Units per month for free. TLS is required. |
+
+Steps (Render + Aiven):
+1. Push the repository to GitHub (see the README section *GitHub*).
+2. Aiven: create a free MySQL service and note the host, port, user and password. Create the database `resqlens_db`, or use `defaultdb` and set `DB_NAME` to it.
+3. Render: New → Web Service → connect the repository. Runtime **Docker** (it uses the root `Dockerfile`). Health check path `/api/health`.
+4. Render environment variables: `APP_ENV=production`, `SECRET_KEY=<random>`, `DB_ENGINE=mysql`, `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_SSL=1`, `SEED_DEMO=0` (or `1` once for a public demo account), `CORS_ORIGINS=https://<your-app>.onrender.com`.
+5. Deploy, then verify `https://<your-app>.onrender.com/api/health`, `/docs` and the UI.
+
+Paid alternatives without cold starts: Render Starter instance, or Railway.
+
+## Production checklist
+- [ ] `SECRET_KEY` is long and random, and differs from development
+- [ ] `APP_ENV=production`, `SEED_DEMO=0` (or the demo password changed)
+- [ ] The database user only has rights on its own database; TLS is on for hosted MySQL
+- [ ] HTTPS in front of the app; `CORS_ORIGINS` lists only your domain
+- [ ] Backups: the provider's automatic backups, or `mysqldump` on a schedule (`database/backup.bat` locally)
+- [ ] `/api/health` is monitored; logs are retained by the host (uvicorn logs go to stdout)
+- [ ] `.env` and `deployment/.env.production` are **not** in Git (`git status` shows neither)
+
+## Schema changes (migrations)
+The schema is applied idempotently at startup. New tables can be added to both `backend/app/schema.sql` and `backend/app/schema_mysql.sql`. For changes to existing columns, write a one-off `ALTER TABLE` script under `database/migrations/`, run it during a maintenance window, and take a backup first. A migration framework such as Alembic would be the next step if the schema starts changing often.

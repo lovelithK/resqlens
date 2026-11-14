@@ -1,0 +1,50 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Backend: uvicorn (debug)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": ["app.main:app", "--host", "127.0.0.1", "--port", "8000"],
+      "cwd": "${workspaceFolder}/backend",
+      "envFile": "${workspaceFolder}/.env",
+      "python": "${workspaceFolder}/backend/venv/Scripts/python.exe",
+      "justMyCode": true
+    },
+    {
+      "name": "Backend: pytest (all tests)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["tests", "-q"],
+      "cwd": "${workspaceFolder}/backend",
+      "envFile": "${workspaceFolder}/.env",
+      "python": "${workspaceFolder}/backend/venv/Scripts/python.exe"
+    },
+    {
+      "name": "Backend: database check",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "scripts.check_db",
+      "cwd": "${workspaceFolder}/backend",
+      "envFile": "${workspaceFolder}/.env",
+      "python": "${workspaceFolder}/backend/venv/Scripts/python.exe"
+    },
+    {
+      "name": "Frontend: open in Edge (debug)",
+      "type": "msedge",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend/src",
+      "preLaunchTask": "Frontend: dev server"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "ResQLens: full stack",
+      "configurations": ["Backend: uvicorn (debug)", "Frontend: open in Edge (debug)"],
+      "stopAll": true
+    }
+  ]
+}

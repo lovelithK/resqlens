@@ -1,0 +1,41 @@
+flowchart TB
+  subgraph P["1 · Presentation layer (React + TypeScript)"]
+    UI["Pages: Dashboard · Projects · Workspace · Architecture Builder · Failure Simulation · Impact · Root Cause · Recovery Planner · Recovery Execution · Resilience · What-If · History · Reports · Settings"]
+    GC["GraphCanvas (SVG dependency graph)"]
+    CH["SVG charts"]
+  end
+  subgraph A["2 · API layer (Starlette + Pydantic)"]
+    R["REST routes /api/*"]
+    AU["JWT auth + server-side sessions"]
+    V["Pydantic request validation · uniform JSON errors"]
+  end
+  subgraph B["3 · Business logic layer (pure Python, framework-free)"]
+    DM["DependencyManager<br/>cycle detection · validation · layering"]
+    PE["FailurePropagationEngine<br/>BFS + monotone fixed point<br/>«Strategy» PropagationPolicy"]
+    IA["ImpactAnalyzer<br/>weighted score"]
+    RC["RootCauseAnalyzer<br/>verified vs inferred"]
+    RP["RecoveryPlanner<br/>«Strategy» RecoveryStrategy ×4"]
+    EX["RecoveryExecutor"]
+    RS["SPOFDetector · «Strategy» ResilienceScoringModel"]
+    CMD["«Command» CommandInvoker + commands"]
+    BUS["«Observer» EventBus"]
+  end
+  subgraph D["4 · Data access layer"]
+    REPO["Repository classes (parameterised SQL)"]
+    OBS["Observers: ArchitectureGraph · EventLog · DashboardMetrics · Notification"]
+  end
+  subgraph S["5 · Persistence"]
+    DB[("SQLite (PostgreSQL-compatible schema)")]
+  end
+  UI --> R
+  GC --> UI
+  CH --> UI
+  R --> AU --> V --> CMD
+  V --> PE & IA & RC & RP & EX & RS
+  CMD --> REPO
+  PE --> DM
+  EX --> PE
+  CMD --> BUS
+  EX --> BUS
+  BUS --> OBS --> REPO
+  REPO --> DB

@@ -1,0 +1,122 @@
+classDiagram
+  direction LR
+  class Component {
+    -_status: ComponentStatus
+    -_health: float
+    +id: int
+    +name: str
+    +component_type: ComponentType
+    +criticality: Criticality
+    +baseline_status / baseline_health
+    +recovery_priority: int
+    +estimated_recovery_minutes: float
+    +recovery_cost: float
+    +operating_rule: OperatingRule
+    +transition_to(status, health)
+    +can_transition_to(status) bool
+    +reset_to_baseline()
+    +is_available bool
+  }
+  class Dependency {
+    +source_id  "dependent"
+    +target_id  "dependency"
+    +dependency_type: MANDATORY|OPTIONAL
+    +fallback_id: int?
+  }
+  class Functionality {
+    +name
+    +is_critical: bool
+    +component_ids: list
+  }
+  class SystemArchitecture {
+    +components: dict
+    +dependencies: list
+    +functionalities: list
+    +graph: DiGraph
+    +dependencies_of(id)
+    +dependents_of(id)
+    +upstream_closure(id)
+    +downstream_closure(id)
+    +functionality_status(statuses)
+  }
+  SystemArchitecture "1" *-- "*" Component
+  SystemArchitecture "1" *-- "*" Dependency
+  SystemArchitecture "1" *-- "*" Functionality
+
+  class FailureEvent {
+    <<abstract>>
+    +component_id
+    +severity 1..10
+    +resulting_status()*
+    +recovery_action()*
+    +resulting_health()
+    +recovery_time_factor()
+    +validate_target(component)
+  }
+  FailureEvent <|-- CompleteServiceFailure
+  FailureEvent <|-- DatabaseFailure
+  FailureEvent <|-- NetworkFailure
+  FailureEvent <|-- ApiTimeout
+  FailureEvent <|-- HighLatency
+  FailureEvent <|-- ResourceExhaustion
+  FailureEvent <|-- PartialDegradation
+
+  class PropagationPolicy {
+    <<abstract>>
+    +mandatory_loss_status()*
+    +evaluate(arch, component, statuses)
+  }
+  PropagationPolicy <|-- BlockingPolicy
+  PropagationPolicy <|-- FailFastPolicy
+  class FailurePropagationEngine {
+    +propagate(failures) PropagationResult
+  }
+  FailurePropagationEngine o-- PropagationPolicy
+  FailurePropagationEngine --> SystemArchitecture
+  class PropagationResult { +outcomes +steps +propagation_edges +max_tick +statuses(tick) }
+  FailurePropagationEngine ..> PropagationResult
+
+  class ImpactAnalyzer { +analyze(result, failures, duration) ImpactReport }
+  class RootCauseAnalyzer { +analyze(statuses, verified) +diagnose(observed) }
+
+  class RecoveryStrategy {
+    <<abstract>>
+    +key / name / guarantee
+    +select(ready, ctx, completed)*
+    +rationale(action, ctx, ready)*
+    +build_order(ctx)
+  }
+  RecoveryStrategy <|-- DependencyFirstStrategy
+  RecoveryStrategy <|-- CriticalityFirstStrategy
+  RecoveryStrategy <|-- MaximumFunctionalityStrategy
+  RecoveryStrategy <|-- MinimumCostStrategy
+  class RecoveryPlanner { +build_actions() +generate(strategy) +compare() +validate_sequence(order) }
+  RecoveryPlanner ..> RecoveryStrategy
+  class PlannedAction { +component_id +action_type +estimated_minutes +cost +prerequisites +explanation }
+  RecoveryPlanner ..> PlannedAction
+  class RecoveryExecutor { +check_dependencies(id) +execute(id, minutes) ExecutionOutcome }
+  RecoveryExecutor --> PropagationPolicy
+
+  class ResilienceScoringModel { <<abstract>> +factors()* +score() }
+  ResilienceScoringModel <|-- OperationalResilienceModel
+  ResilienceScoringModel <|-- DesignResilienceModel
+  class SPOFDetector { +analyze() }
+
+  class EventBus { +subscribe(observer, types) +unsubscribe(o) +publish(event) }
+  class EventObserver { <<interface>> +notify(event)* }
+  EventBus o-- EventObserver
+  EventObserver <|.. ArchitectureGraphObserver
+  EventObserver <|.. EventLogObserver
+  EventObserver <|.. DashboardMetricsObserver
+  EventObserver <|.. NotificationObserver
+
+  class Command { <<abstract>> +validate()* +execute()* +undo() +describe()* }
+  class CommandInvoker { +run(command) +undo_last(project) }
+  CommandInvoker o-- Command
+  Command <|-- AddComponentCommand
+  Command <|-- RemoveComponentCommand
+  Command <|-- ConnectComponentsCommand
+  Command <|-- InjectFailureCommand
+  Command <|-- StartSimulationCommand
+  Command <|-- RestoreComponentCommand
+  Command <|-- ResetSimulationCommand

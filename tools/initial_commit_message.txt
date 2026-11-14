@@ -1,0 +1,11 @@
+Initial commit: ResQLens failure diagnosis and recovery platform
+
+Full-stack application (React + TypeScript frontend, Python/Starlette backend,
+MySQL 8 or SQLite) for modelling architectures, simulating cascading failures,
+impact and root-cause analysis, recovery planning/execution and resilience scoring.
+
+Includes Windows setup/start scripts, VS Code workspace config, MySQL setup,
+automated verification, Docker deployment files and documentation.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_011HWv34PhvnHGbiigAWCNov

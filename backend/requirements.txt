@@ -1,0 +1,12 @@
+# ResQLens backend – tested with Python 3.13 (works on 3.10+)
+starlette>=0.40,<2
+uvicorn[standard]>=0.30
+pydantic>=2.6,<3
+PyJWT>=2.8,<3
+networkx>=3.2
+reportlab>=4.0
+pandas>=2.0
+# MySQL driver (+ cryptography for MySQL 8 caching_sha2_password authentication)
+PyMySQL>=1.1
+cryptography>=42
+pytest>=8.0

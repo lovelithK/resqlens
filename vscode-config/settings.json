@@ -1,0 +1,58 @@
+{
+  // ---- Python (backend) ----
+  "python.defaultInterpreterPath": "${workspaceFolder}/backend/venv/Scripts/python.exe",
+  "python.terminal.activateEnvironment": true,
+  "python.envFile": "${workspaceFolder}/.env",
+  "python.analysis.extraPaths": ["${workspaceFolder}/backend"],
+  "python.analysis.typeCheckingMode": "basic",
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.cwd": "${workspaceFolder}/backend",
+  "python.testing.pytestArgs": ["tests", "-q"],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python",
+    "editor.rulers": [120],
+    "editor.tabSize": 4
+  },
+
+  // ---- TypeScript / React (frontend) ----
+  "typescript.tsdk": "frontend/node_modules/typescript/lib",
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[css]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "prettier.printWidth": 140,
+
+  // ---- Editor / terminal ----
+  "editor.formatOnSave": false,
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.associations": { "*.bat": "bat", ".env*": "properties" },
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "terminal.integrated.cwd": "${workspaceFolder}",
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "frontend/.dev": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/venv": true,
+    "frontend/dist": true,
+    "frontend/.dev": true
+  },
+
+  // ---- SQLTools connection to the local MySQL (password asked at connect time, never stored) ----
+  "sqltools.connections": [
+    {
+      "name": "ResQLens Local (resqlens_app)",
+      "driver": "MySQL",
+      "server": "127.0.0.1",
+      "port": 3306,
+      "database": "resqlens_db",
+      "username": "resqlens_app",
+      "askForPassword": true
+    }
+  ]
+}

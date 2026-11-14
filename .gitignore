@@ -1,0 +1,22 @@
+# Secrets / local config
+.env
+deployment/.env.production
+# Python
+__pycache__/
+*.pyc
+backend/venv/
+.venv/
+venv/
+.pytest_cache/
+# Databases & backups (may contain personal data)
+*.db
+*.db-*
+database/backups/
+# Node / build
+frontend/node_modules/
+frontend/.dev/
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+logs/

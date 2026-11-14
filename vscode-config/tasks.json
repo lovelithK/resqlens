@@ -1,0 +1,63 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Setup (first time)",
+      "type": "shell",
+      "command": "${workspaceFolder}\\setup.bat",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Backend: start (reload)",
+      "type": "shell",
+      "command": "${workspaceFolder}\\start_backend.bat",
+      "isBackground": true,
+      "problemMatcher": { "pattern": { "regexp": "^x" }, "background": { "activesBegin": "Checking database", "endsPattern": "Application startup complete" } }
+    },
+    {
+      "label": "Frontend: dev server",
+      "type": "shell",
+      "command": "npm run dev -- --host 127.0.0.1 --port 5173",
+      "options": { "cwd": "${workspaceFolder}/frontend" },
+      "isBackground": true,
+      "problemMatcher": { "pattern": { "regexp": "^x" }, "background": { "activesBegin": "build started|esbuild", "endsPattern": "ResQLens dev server" } }
+    },
+    {
+      "label": "ResQLens: start everything",
+      "dependsOn": ["Backend: start (reload)", "Frontend: dev server"],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+    {
+      "label": "Backend: tests",
+      "type": "shell",
+      "command": "${workspaceFolder}\\backend\\venv\\Scripts\\python.exe -m pytest tests -q",
+      "options": { "cwd": "${workspaceFolder}/backend" },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Backend: database check",
+      "type": "shell",
+      "command": "${workspaceFolder}\\backend\\venv\\Scripts\\python.exe -m scripts.check_db",
+      "options": { "cwd": "${workspaceFolder}/backend" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Frontend: production build",
+      "type": "shell",
+      "command": "npm run build",
+      "options": { "cwd": "${workspaceFolder}/frontend" },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Frontend: type-check",
+      "type": "shell",
+      "command": "npm run typecheck",
+      "options": { "cwd": "${workspaceFolder}/frontend" },
+      "problemMatcher": ["$tsc"]
+    }
+  ]
+}

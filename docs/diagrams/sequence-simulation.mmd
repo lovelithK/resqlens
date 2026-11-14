@@ -1,0 +1,39 @@
+sequenceDiagram
+  autonumber
+  actor U as Engineer
+  participant UI as React UI
+  participant API as REST API
+  participant SS as SimulationService
+  participant CI as CommandInvoker
+  participant PE as FailurePropagationEngine
+  participant BUS as EventBus
+  participant OBS as Observers
+  participant DB as Database
+
+  U->>UI: choose scenario, failure type, severity
+  UI->>API: POST /api/simulations
+  API->>SS: create(project, failures)
+  loop each failure
+    SS->>CI: run(InjectFailureCommand)
+    CI->>DB: validate target · insert failure_event · log command
+  end
+  UI->>API: POST /api/simulations/{id}/start
+  API->>SS: start(id)
+  SS->>CI: run(StartSimulationCommand)
+  CI->>DB: reject duplicate/active simulation · validate DAG
+  SS->>PE: propagate(failures)
+  PE->>PE: apply sources → BFS over dependents → fixed-point evaluation → chronology BFS
+  PE-->>SS: PropagationResult (statuses, ticks, paths)
+  SS->>DB: save simulation_results
+  SS->>BUS: publish FAILURE_INJECTED + COMPONENT_STATUS_CHANGED (tick 0)
+  BUS->>OBS: notify
+  OBS->>DB: update component state · event log · project health
+  loop while RUNNING (UI auto-advance)
+    UI->>API: POST /simulations/{id}/tick
+    SS->>BUS: publish DEPENDENCY_AFFECTED / FAILURE_PROPAGATED (tick n)
+    BUS->>OBS: notify → DB
+  end
+  SS->>SS: ImpactAnalyzer + RootCauseAnalyzer (final tick)
+  SS->>BUS: PROPAGATION_COMPLETED, ROOT_CAUSE_IDENTIFIED
+  API-->>UI: simulation detail + notifications
+  UI-->>U: animated cascade, impact score, root cause

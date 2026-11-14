@@ -1,0 +1,23 @@
+### ResQLens API smoke requests (VS Code "REST Client" extension: click "Send Request")
+@base = http://localhost:8000/api
+
+### Health (no auth)
+GET {{base}}/health
+
+### Login with the demo account – copy "token" into @token below
+# @name login
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{ "email": "demo@resqlens.dev", "password": "Demo@2026" }
+
+###
+@token = {{login.response.body.token}}
+
+### Projects
+GET {{base}}/projects
+Authorization: Bearer {{token}}
+
+### Dashboard
+GET {{base}}/dashboard
+Authorization: Bearer {{token}}
