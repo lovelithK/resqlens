@@ -7,6 +7,3 @@ Refresh screenshots and docs for the new design and live deployment
 - DEPLOYMENT.md: current Render + TiDB Cloud Starter setup (permanent
   MySQL-compatible database) and its environment variables (no values)
 - add_sample_projects.py: target another server with RESQLENS_API
-
-Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_011HWv34PhvnHGbiigAWCNov

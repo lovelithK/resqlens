@@ -6,6 +6,3 @@ impact and root-cause analysis, recovery planning/execution and resilience scori
 
 Includes Windows setup/start scripts, VS Code workspace config, MySQL setup,
 automated verification, Docker deployment files and documentation.
-
-Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_011HWv34PhvnHGbiigAWCNov

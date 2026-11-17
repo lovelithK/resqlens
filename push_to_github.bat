@@ -16,12 +16,12 @@ git remote get-url origin >nul 2>nul && (git remote set-url origin "%REMOTE%") |
 echo Remote: %REMOTE%>> "%REPORT%"
 REM Commit this script itself if it is new or changed (secret check already passed above)
 git add push_to_github.bat
-git diff --cached --quiet || git commit -q -m "Add GitHub push script" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_011HWv34PhvnHGbiigAWCNov"
+git diff --cached --quiet || git commit -q -m "Add GitHub push script"
 REM GitHub created the repo with its own one-line README: join the histories, keeping the full local README
 git fetch -q origin >> "%REPORT%" 2>&1
 git rev-parse -q --verify origin/main >nul 2>nul && (
   git merge-base --is-ancestor origin/main HEAD || (
-    git merge -q --allow-unrelated-histories -X ours --no-edit origin/main -m "Merge GitHub's initial commit (keep the full local README)" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_011HWv34PhvnHGbiigAWCNov" >> "%REPORT%" 2>&1 || (
+    git merge -q --allow-unrelated-histories -X ours --no-edit origin/main -m "Merge GitHub's initial commit (keep the full local README)" >> "%REPORT%" 2>&1 || (
       git merge --abort >nul 2>nul
       echo [ERROR] Could not merge GitHub's initial commit - nothing pushed.>> "%REPORT%"
       type "%REPORT%" & pause & exit /b 1

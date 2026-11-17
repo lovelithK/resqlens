@@ -8,6 +8,3 @@ Redesign UI with the Harbour & Lens design system
 - Add docs/VERIFICATION_REPORT.md from laptop setup
 - Add tools/add_sample_projects.py and add_projects_and_commit.bat (four sample
   architectures and two simulations, simulated data)
-
-Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_011HWv34PhvnHGbiigAWCNov
