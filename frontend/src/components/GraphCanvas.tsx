@@ -79,7 +79,7 @@ export default function GraphCanvas(p: Props) {
     if (!svg || !ids.length) return;
     const xs = ids.map((i) => pos[+i].x), ys = ids.map((i) => pos[+i].y);
     const minX = Math.min(...xs) - 30, maxX = Math.max(...xs) + NODE_W + 30;
-    const minY = Math.min(...ys) - 64, maxY = Math.max(...ys) + NODE_H + 72;
+    const minY = Math.min(...ys) - 34, maxY = Math.max(...ys) + NODE_H + 96;
     const { width, height } = svg.getBoundingClientRect();
     if (!width || !height) return;
     const k = Math.min(1.25, Math.max(0.25, Math.min(width / (maxX - minX), height / (maxY - minY))));
@@ -190,7 +190,7 @@ export default function GraphCanvas(p: Props) {
         onPointerDown={onPointerDownBg} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerLeave={onPointerUp}
         role="application" aria-label="Architecture dependency graph">
         <defs>
-          {[["arrow", "#36507a"], ["arrow-red", "#ef4444"], ["arrow-cyan", "#22d3ee"]].map(([id, c]) => (
+          {[["arrow", "#4a7c8c"], ["arrow-red", "#ff6b66"], ["arrow-cyan", "#a69bff"]].map(([id, c]) => (
             <marker key={id} id={id} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0,0 L10,5 L0,10 z" fill={c} />
             </marker>
@@ -216,11 +216,11 @@ export default function GraphCanvas(p: Props) {
             );
           })}
           {drag?.kind === "connect" && cursor && pos[drag.id!] && (
-            <line x1={pos[drag.id!].x + NODE_W / 2} y1={pos[drag.id!].y + NODE_H} x2={cursor.x} y2={cursor.y} stroke="#22d3ee" strokeWidth={1.8} strokeDasharray="5 4" markerEnd="url(#arrow-cyan)" />
+            <line x1={pos[drag.id!].x + NODE_W / 2} y1={pos[drag.id!].y + NODE_H} x2={cursor.x} y2={cursor.y} stroke="#a69bff" strokeWidth={1.8} strokeDasharray="5 4" markerEnd="url(#arrow-cyan)" />
           )}
           {p.nodes.map((n) => {
             const q = pos[n.id];
-            const color = STATUS_COLOR[n.status] || "#64748b";
+            const color = STATUS_COLOR[n.status] || "#5e7c85";
             const imp = p.impact?.[n.id];
             const dim = p.focusIds && !p.focusIds.has(n.id);
             return (
@@ -228,20 +228,20 @@ export default function GraphCanvas(p: Props) {
                 opacity={dim ? 0.35 : 1} onPointerDown={(e) => onPointerDownNode(e, n.id)} style={{ cursor: p.editable ? "move" : "pointer" }}>
                 <title>{`${n.name} · ${TYPE_LABEL[n.component_type]} · ${n.status} · health ${Math.round(n.health)}% · ${n.criticality}`}</title>
                 <rect className="node-rect" width={NODE_W} height={NODE_H} rx={9}
-                  style={hoverTarget === n.id ? { stroke: "#22d3ee", strokeWidth: 2 } : imp ? { stroke: IMPACT_COLOR[imp], strokeWidth: 1.8 } : undefined} />
+                  style={hoverTarget === n.id ? { stroke: "#a69bff", strokeWidth: 2 } : imp ? { stroke: IMPACT_COLOR[imp], strokeWidth: 1.8 } : undefined} />
                 <rect width={4} height={NODE_H - 16} x={0} y={8} rx={2} fill={color} />
                 <g transform="translate(14,12)" color={color}><TypeIcon type={n.component_type} size={15} /></g>
                 <text className="node-name" x={36} y={24}>{n.name.length > 21 ? n.name.slice(0, 20) + "…" : n.name}</text>
                 <text className="node-sub" x={36} y={42}>{n.status.toLowerCase()} · {Math.round(n.health)}% · {n.criticality.toLowerCase()}</text>
-                <rect x={NODE_W - 50} y={NODE_H - 10} width={40} height={3} rx={1.5} fill="#1f2f4a" />
+                <rect x={NODE_W - 50} y={NODE_H - 10} width={40} height={3} rx={1.5} fill="#22434f" />
                 <rect x={NODE_W - 50} y={NODE_H - 10} width={40 * Math.max(0, Math.min(1, n.health / 100))} height={3} rx={1.5} fill={color} />
                 {imp && <g transform={`translate(${NODE_W - 64},-9)`}>
-                  <rect width={60} height={17} rx={8.5} fill="#0d1626" stroke={IMPACT_COLOR[imp]} />
+                  <rect width={60} height={17} rx={8.5} fill="#0f2229" stroke={IMPACT_COLOR[imp]} />
                   <text x={30} y={12} textAnchor="middle" fontSize={9.5} fontWeight={700} fill={IMPACT_COLOR[imp]}>{imp}</text>
                 </g>}
                 {p.badges?.[n.id] && <g transform="translate(-9,-9)">
-                  <circle cx={10} cy={10} r={10} fill="#2563eb" stroke="#0d1626" strokeWidth={2} />
-                  <text x={10} y={14} textAnchor="middle" fontSize={10.5} fontWeight={700} fill="white">{p.badges[n.id]}</text>
+                  <circle cx={10} cy={10} r={10} fill="#a69bff" stroke="#0f2229" strokeWidth={2} />
+                  <text x={10} y={14} textAnchor="middle" fontSize={10.5} fontWeight={700} fill="#0f2229">{p.badges[n.id]}</text>
                 </g>}
                 {p.editable && p.onConnect && <circle className="node-handle" cx={NODE_W / 2} cy={NODE_H} r={6}
                   onPointerDown={(e) => onPointerDownHandle(e, n.id)}><title>Drag onto another component to add a dependency</title></circle>}
@@ -259,10 +259,10 @@ export default function GraphCanvas(p: Props) {
       {p.showLegend !== false && (
         <div className="graph-legend">
           {Object.entries(STATUS_COLOR).map(([k, c]) => <span key={k}><span className="legend-dot" style={{ background: c }} />{k.toLowerCase()}</span>)}
-          <span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#5b7aa8" strokeWidth="1.6" /></svg>mandatory</span>
-          <span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#5b7aa8" strokeWidth="1.6" strokeDasharray="4 3" /></svg>optional</span>
-          <span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#22d3ee" strokeWidth="1.4" strokeDasharray="2 3" /></svg>backup</span>
-          {p.propagationEdges && <span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#ef4444" strokeWidth="2" strokeDasharray="5 3" /></svg>propagation</span>}
+          <span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#6a98a8" strokeWidth="1.6" /></svg>mandatory</span>
+          <span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#6a98a8" strokeWidth="1.6" strokeDasharray="4 3" /></svg>optional</span>
+          <span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#a69bff" strokeWidth="1.4" strokeDasharray="2 3" /></svg>backup</span>
+          {p.propagationEdges && <span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#ff6b66" strokeWidth="2" strokeDasharray="5 3" /></svg>propagation</span>}
           <span className="faint">arrow = “depends on”</span>
         </div>
       )}

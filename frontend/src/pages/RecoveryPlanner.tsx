@@ -4,13 +4,13 @@ import { api } from "../lib/api";
 import { useFeedback } from "../lib/feedback";
 import { useApi } from "../lib/hooks";
 import { navigate } from "../lib/router";
-import { minutes } from "../lib/format";
+import { minutes, SERIES } from "../lib/format";
 import { SimSelector, useProjectSimulation } from "../components/SimSelector";
 import { Badge, Callout, Card, Empty, Loading, PageHeader } from "../components/ui";
 import { BarChart, LineChart } from "../components/charts";
 import { NoSimulation } from "./Impact";
 
-const COLORS = ["#3b82f6", "#22d3ee", "#a78bfa", "#f59e0b"];
+const COLORS = SERIES;
 const PLANNABLE = ["PROPAGATED", "STOPPED", "PARTIALLY_RECOVERED"];
 
 export function Explanation({ e }: { e: any }) {

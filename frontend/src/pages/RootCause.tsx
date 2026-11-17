@@ -43,7 +43,7 @@ export default function RootCausePage({ pid }: { pid: number }) {
   const diagnosis = (
     <Card title="Symptom-based diagnosis" icon={<LuCrosshair />} sub="Select components observed as unavailable; ResQLens ranks potential root causes (no simulation needed).">
       <div className="chips">{(arch.data?.components || []).map((c: any) => (
-        <label key={c.id} className="chip check" style={{ background: observed.includes(c.id) ? "var(--accent-soft)" : undefined, borderColor: observed.includes(c.id) ? "rgba(59,130,246,.5)" : undefined }}>
+        <label key={c.id} className="chip check" style={{ background: observed.includes(c.id) ? "var(--accent-soft)" : undefined, borderColor: observed.includes(c.id) ? "var(--accent-line)" : undefined }}>
           <input type="checkbox" checked={observed.includes(c.id)} onChange={(e) => setObserved(e.target.checked ? [...observed, c.id] : observed.filter((x) => x !== c.id))} />{c.name}
         </label>))}</div>
       <div className="row mt12"><button className="btn primary sm" disabled={!observed.length || busy} onClick={diagnose}><LuSearch />Diagnose</button>
@@ -79,7 +79,7 @@ export default function RootCausePage({ pid }: { pid: number }) {
           <div className="grid g2">
             <Card title="Verified causes" sub="Failure events injected into this simulation">
               <div className="col" style={{ gap: 10 }}>{r.verified_causes.map((v: any) => (
-                <div key={v.component_id} className="callout" style={{ borderColor: "rgba(34,211,238,.4)" }}>
+                <div key={v.component_id} className="callout" style={{ borderColor: "var(--accent-line)" }}>
                   <div className="col" style={{ gap: 6 }}><div className="row"><span className="strong">{v.component_name}</span><Badge value="VERIFIED" /></div>
                     <span className="small">{v.explanation}</span>{v.description && <span className="faint xs">“{v.description}”</span>}</div>
                 </div>))}</div>

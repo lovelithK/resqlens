@@ -122,7 +122,7 @@ export default function ExecutionPage({ pid }: { pid: number }) {
                         <div className="row small"><span className="strong ellipsis">{a.component_name}</span><div className="spacer" />
                           {a.attempts > 0 && a.status === "PENDING" ? <Badge value="WARNING" label="retry queued" /> : <Badge value={a.status === "PENDING" ? "INFO" : a.status} label={a.status.toLowerCase()} />}</div>
                         <div className="muted xs">{a.action_label} · est. {minutes(a.estimated_minutes)}{a.sim_end_minute !== null && ` · ended at minute ${a.sim_end_minute}`}</div>
-                        {a.failure_reason && <div className="xs" style={{ color: "#fca5a5", marginTop: 3 }}>{a.failure_reason}</div>}
+                        {a.failure_reason && <div className="xs" style={{ color: "#ffaaa6", marginTop: 3 }}>{a.failure_reason}</div>}
                         {openId === a.id && <Explanation e={a.explanation} />}
                       </div>
                     </div>

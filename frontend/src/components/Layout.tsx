@@ -16,20 +16,24 @@ export function lastProject(): string | null {
   try { return localStorage.getItem(LAST_PROJECT); } catch { return null; }
 }
 
-function Logo() {
+export function Logo({ size = 30 }: { size?: number }) {
+  // A lens ring with a violet coating arc; inside, a three-node dependency path.
   return (
-    <div className="brand-mark" aria-hidden>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <circle cx="10.5" cy="10.5" r="6.5" stroke="#22d3ee" strokeWidth="2.2" />
-        <path d="M15.5 15.5L21 21" stroke="#3b82f6" strokeWidth="2.4" strokeLinecap="round" />
-        <path d="M7.5 10.5h2l1-2 1.5 4 1-2h1.5" stroke="#e5ecf6" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    <div className="brand-mark" aria-hidden style={{ width: size, height: size }}>
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="13" stroke="#e3edef" strokeWidth="2" />
+        <path d="M5.2 11.2A12 12 0 0 1 16 3.5" stroke="#a69bff" strokeWidth="2.6" strokeLinecap="round" />
+        <path d="M10.5 19.5 16 12.5l5.5 7" stroke="#86a2a9" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="16" cy="12.5" r="2.4" fill="#ff6b66" />
+        <circle cx="10.5" cy="19.5" r="2.1" fill="#3fd49a" />
+        <circle cx="21.5" cy="19.5" r="2.1" fill="#3fd49a" />
       </svg>
     </div>
   );
 }
 
 export function BrandLogo() {
-  return <div className="row" style={{ gap: 10 }}><Logo /><span className="brand-name">ResQ<span>Lens</span></span></div>;
+  return <div className="row" style={{ gap: 11 }}><Logo size={34} /><span className="brand-name" style={{ fontSize: 21 }}>ResQ<span>Lens</span></span></div>;
 }
 
 export default function Layout({ children, flush }: { children: ReactNode; flush?: boolean }) {
@@ -120,7 +124,7 @@ export default function Layout({ children, flush }: { children: ReactNode; flush
             </select>
           )}
           <div className="row small" style={{ gap: 8 }}>
-            <div style={{ width: 30, height: 30, borderRadius: 8, background: "var(--panel-3)", display: "grid", placeItems: "center", fontWeight: 600 }} aria-hidden>
+            <div className="avatar" aria-hidden>
               {(user?.full_name || "?").split(" ").map((s) => s[0]).slice(0, 2).join("")}
             </div>
             <div className="col" style={{ gap: 0 }}><span className="strong">{user?.full_name}</span><span className="faint xs">{user?.email}</span></div>

@@ -88,7 +88,7 @@ export default function WhatIfPage({ pid }: { pid: number }) {
           </Card>
           <div className="grid g2 mt16">
             <Card title="Impact score"><BarChart data={result.map((r) => ({ label: r.name.replace(/^Scenario \d+: /, ""), value: r.impact_score, color: SEVERITY_COLOR[r.severity_class] }))} max={100} /></Card>
-            <Card title="Estimated recovery time (min)"><BarChart data={result.map((r) => ({ label: r.name.replace(/^Scenario \d+: /, ""), value: r.recovery_minutes, color: "#22d3ee" }))} /></Card>
+            <Card title="Estimated recovery time (min)"><BarChart data={result.map((r) => ({ label: r.name.replace(/^Scenario \d+: /, ""), value: r.recovery_minutes, color: "#a69bff" }))} /></Card>
           </div>
           <Callout kind="info">What-if results are not stored and do not change component states.</Callout>
         </>

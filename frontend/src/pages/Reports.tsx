@@ -4,7 +4,7 @@ import { download } from "../lib/api";
 import { useFeedback } from "../lib/feedback";
 import { useApi } from "../lib/hooks";
 import { useQueryParam } from "../lib/router";
-import { fmtDate, FAILURE_LABEL, minutes } from "../lib/format";
+import { fmtDate, FAILURE_LABEL, minutes, sentence } from "../lib/format";
 import { Badge, Callout, Card, Empty, Loading, PageHeader, PathView } from "../components/ui";
 import { eventLevel } from "./Dashboard";
 
@@ -88,7 +88,7 @@ export default function ReportsPage() {
       </Section>
       <Card title="Event timeline">
         <div className="timeline">{r.timeline.map((e: any) => (
-          <div key={e.id} className={`tl-item ${eventLevel(e.event_type)}`}><span className="tl-type">{e.event_type.replace(/_/g, " ")}</span><div className="tl-msg">{e.message}</div><div className="tl-time">{fmtDate(e.created_at)}</div></div>
+          <div key={e.id} className={`tl-item ${eventLevel(e.event_type)}`}><span className="tl-type">{sentence(e.event_type)}</span><div className="tl-msg">{e.message}</div><div className="tl-time">{fmtDate(e.created_at)}</div></div>
         ))}</div>
       </Card>
     </>

@@ -1,0 +1,13 @@
+Redesign UI with the Harbour & Lens design system
+
+- New petrol-teal and lens-violet palette with distinct status colours (WCAG AA text contrast)
+- Bundled TeX Gyre Adventor (display) and Inter (UI) fonts with licences
+- Animated lens hero on the sign-in page (respects reduced motion) and new logo
+- Dashboard stat strip, violet active nav rail, sentence-case event names
+- Updated chart, graph and badge colours; graph legend moved off the nodes
+- Add docs/VERIFICATION_REPORT.md from laptop setup
+- Add tools/add_sample_projects.py and add_projects_and_commit.bat (four sample
+  architectures and two simulations, simulated data)
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_011HWv34PhvnHGbiigAWCNov

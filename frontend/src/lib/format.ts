@@ -1,11 +1,11 @@
 export const STATUS_COLOR: Record<string, string> = {
-  HEALTHY: "#22c55e", DEGRADED: "#f59e0b", FAILED: "#ef4444", BLOCKED: "#f43f5e", RECOVERING: "#3b82f6",
+  HEALTHY: "#3fd49a", DEGRADED: "#f4b740", FAILED: "#ff6b66", BLOCKED: "#ff8c42", RECOVERING: "#5bb8f5",
 };
 export const IMPACT_COLOR: Record<string, string> = {
-  SOURCE: "#ef4444", DIRECT: "#f97316", INDIRECT: "#eab308", UNAFFECTED: "#475569",
+  SOURCE: "#ff6b66", DIRECT: "#ff8c42", INDIRECT: "#f4b740", UNAFFECTED: "#5e7c85",
 };
 export const SEVERITY_COLOR: Record<string, string> = {
-  LOW: "#22c55e", MODERATE: "#f59e0b", HIGH: "#f43f5e", CRITICAL: "#ef4444",
+  LOW: "#3fd49a", MODERATE: "#f4b740", HIGH: "#ff8c42", CRITICAL: "#ff6b66",
 };
 export const TYPE_LABEL: Record<string, string> = {
   FRONTEND: "Frontend Service", BACKEND: "Backend Service", API_GATEWAY: "API Gateway", AUTH: "Authentication Service",
@@ -17,6 +17,12 @@ export const FAILURE_LABEL: Record<string, string> = {
   NETWORK_FAILURE: "Network Failure", API_TIMEOUT: "API Timeout", HIGH_LATENCY: "High Latency",
   RESOURCE_EXHAUSTION: "Resource Exhaustion", PARTIAL_DEGRADATION: "Partial Service Degradation",
   MULTIPLE_SIMULTANEOUS: "Multiple Simultaneous Failures",
+};
+
+/** "FAILURE_PROPAGATED" -> "Failure propagated" (sentence case for event names). */
+export const sentence = (s?: string | null) => {
+  const t = (s || "").toLowerCase().replace(/_/g, " ");
+  return t.charAt(0).toUpperCase() + t.slice(1);
 };
 
 export const title = (s?: string | null) =>
@@ -44,12 +50,16 @@ export const minutes = (m?: number | null) => (m === null || m === undefined ? "
 export const pct = (v?: number | null, digits = 0) => (v === null || v === undefined ? "–" : `${(v * 100).toFixed(digits)}%`);
 
 export function scoreColor(score?: number | null) {
-  if (score === null || score === undefined) return "#64748b";
-  if (score >= 85) return "#22c55e";
-  if (score >= 70) return "#84cc16";
-  if (score >= 55) return "#f59e0b";
-  if (score >= 40) return "#f97316";
-  return "#ef4444";
+  if (score === null || score === undefined) return "#5e7c85";
+  if (score >= 85) return "#3fd49a";
+  if (score >= 70) return "#9bd86a";
+  if (score >= 55) return "#f4b740";
+  if (score >= 40) return "#ff8c42";
+  return "#ff6b66";
 }
 
 export const ACTIVE_SIM = ["RUNNING", "PAUSED", "PROPAGATED", "STOPPED", "RECOVERING", "PARTIALLY_RECOVERED"];
+
+// Categorical series colours for charts comparing non-status things (e.g. recovery strategies).
+// Kept clear of the status hues: lens violet, sky, sand, rose.
+export const SERIES = ["#a69bff", "#5bb8f5", "#e0c38c", "#e58fb8"];

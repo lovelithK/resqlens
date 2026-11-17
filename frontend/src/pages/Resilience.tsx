@@ -49,7 +49,7 @@ export default function ResiliencePage({ pid }: { pid: number }) {
             )}
           </Card>
           <Card title="Blast radius per component" sub="Share of other components affected by a single complete failure">
-            <BarChart data={[...d.spof].sort((a: any, b: any) => b.blast_radius - a.blast_radius).slice(0, 10).map((r: any) => ({ label: r.name, value: Math.round(r.blast_radius * 100), color: r.is_spof ? "#f43f5e" : "#3b82f6" }))} unit="%" height={230} />
+            <BarChart data={[...d.spof].sort((a: any, b: any) => b.blast_radius - a.blast_radius).slice(0, 10).map((r: any) => ({ label: r.name, value: Math.round(r.blast_radius * 100), color: r.is_spof ? "#ff8c42" : "#a69bff" }))} unit="%" height={230} />
           </Card>
         </div>
         <div className="col" style={{ gap: 14 }}>
@@ -69,7 +69,7 @@ export default function ResiliencePage({ pid }: { pid: number }) {
           </Card>
           <Card title="Score history" sub="Snapshots recorded after propagation and recovery">
             {d.history.length < 2 ? <span className="muted small">Run simulations to build a history.</span> :
-              <LineChart yMax={100} series={[{ name: "score", color: "#22d3ee", points: d.history.map((h: any, i: number) => ({ x: i, y: h.score })) }]} height={160} />}
+              <LineChart yMax={100} series={[{ name: "score", color: "#a69bff", points: d.history.map((h: any, i: number) => ({ x: i, y: h.score })) }]} height={160} />}
             {d.history.length > 0 && <div className="faint xs mt8">Latest: {d.history[d.history.length - 1].score} ({d.history[d.history.length - 1].trigger.toLowerCase()}) · {fmtDate(d.history[d.history.length - 1].created_at)}</div>}
           </Card>
           <Card title="Architecture">

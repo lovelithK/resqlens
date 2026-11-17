@@ -7,22 +7,60 @@ import { Link, navigate } from "../lib/router";
 import { BrandLogo } from "../components/Layout";
 import { Field } from "../components/ui";
 
-function Side() {
-  const qs = [
-    ["01", "Which component failed?"], ["02", "Why did the failure affect other components?"],
-    ["03", "Which services and functionalities are affected?"], ["04", "What should be recovered first?"],
-    ["05", "How can the system become more resilient?"],
+function LensHero() {
+  // Miniature of the product: a database fails, the failure spreads to its dependents,
+  // then the recovery wave restores them (12 s loop; static when reduced motion is on).
+  const nodes: [number, number, string][] = [
+    [100, 50, ""], [100, 78, ""], [60, 104, ""], [100, 106, "n-d1"], [140, 104, "n-d2"],
+    [128, 134, "n-d2"], [100, 152, "n-src"], [62, 140, ""],
   ];
+  const edges: [number, number, string][] = [
+    [0, 1, ""], [1, 2, ""], [1, 3, ""], [1, 4, ""], [3, 6, "e1"], [5, 3, "e2"], [4, 5, "e2"], [2, 7, ""], [3, 7, ""],
+  ];
+  const ticks = Array.from({ length: 48 }, (_, i) => i * 7.5);
+  return (
+    <svg className="auth-lens" viewBox="0 0 200 200" role="img" aria-label="Animated example: a database failure spreads to dependent services and is then recovered">
+      <defs>
+        <clipPath id="lens-clip"><circle cx="100" cy="100" r="78" /></clipPath>
+        <radialGradient id="lens-glass" cx="42%" cy="38%" r="70%">
+          <stop offset="0%" stopColor="#1d4250" /><stop offset="70%" stopColor="#14303a" /><stop offset="100%" stopColor="#0f2229" />
+        </radialGradient>
+      </defs>
+      {ticks.map((a) => (
+        <line key={a} x1="100" y1={a % 30 === 0 ? 4 : 6} x2="100" y2="11" stroke={a % 30 === 0 ? "#86a2a9" : "#2d5562"} strokeWidth={a % 30 === 0 ? 1.2 : 0.8} transform={`rotate(${a} 100 100)`} />
+      ))}
+      <circle cx="100" cy="100" r="86" fill="none" stroke="#2d5562" strokeWidth="1" />
+      <circle cx="100" cy="100" r="80" fill="url(#lens-glass)" stroke="#e3edef" strokeWidth="2.5" />
+      <path d="M31 72 A75 75 0 0 1 100 22" fill="none" stroke="#a69bff" strokeWidth="4" strokeLinecap="round" />
+      <g clipPath="url(#lens-clip)">
+        {edges.map(([a, b, c], i) => (
+          <line key={i} className={`lens-edge ${c}`} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]} />
+        ))}
+        <circle className="lens-ring" cx={nodes[6][0]} cy={nodes[6][1]} r="8" />
+        {nodes.map(([x, y, c], i) => <circle key={i} className={`lens-node ${c}`} cx={x} cy={y} r={c === "n-src" ? 7 : 6} />)}
+      </g>
+    </svg>
+  );
+}
+
+function Side() {
   return (
     <div className="auth-side">
       <BrandLogo />
-      <h1>Diagnose cascading failures and plan recovery with a deterministic, explainable engine.</h1>
-      <div className="col" style={{ gap: 14 }}>
-        {qs.map(([n, q]) => <div key={n} className="q"><b>{n}</b><span>{q}</span></div>)}
+      <div>
+        <h1>See how a failure spreads before it reaches your users.</h1>
+        <p className="lede">Model your system, break one part on purpose, and get a recovery order you can explain to your team.</p>
       </div>
-      <p className="faint small" style={{ maxWidth: 500 }}>
-        All failures in ResQLens are simulated against your modelled architecture. No command is ever executed on real infrastructure.
-      </p>
+      <LensHero />
+      <div className="col" style={{ gap: 14 }}>
+        <div className="auth-legend">
+          <span><span className="dotline" style={{ background: "var(--healthy)" }} />Healthy</span>
+          <span><span className="dotline" style={{ background: "var(--failed)" }} />Failed</span>
+          <span><span className="dotline" style={{ background: "var(--blocked)" }} />Blocked by a dependency</span>
+          <span><span className="dotline" style={{ background: "var(--recovering)" }} />Recovering</span>
+        </div>
+        <p className="foot">Every failure in ResQLens is simulated against the architecture you model. Nothing runs on real infrastructure.</p>
+      </div>
     </div>
   );
 }
@@ -50,7 +88,7 @@ export function LoginPage() {
       <Side />
       <div className="auth-form">
         <form className="auth-card col" style={{ gap: 16 }} onSubmit={submit} noValidate>
-          <div><h1>Sign in</h1><p className="muted mt8">Welcome back. Continue to your resilience workspace.</p></div>
+          <div><h1>Sign in</h1><p className="muted mt8">Continue to your projects and simulations.</p></div>
           {msg && <div className="callout error" role="alert">{msg}</div>}
           <Field label="Email" htmlFor="email"><input id="email" className="input" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
           <Field label="Password" htmlFor="password"><input id="password" className="input" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
@@ -97,7 +135,7 @@ export function RegisterPage() {
       <Side />
       <div className="auth-form">
         <form className="auth-card col" style={{ gap: 14 }} onSubmit={submit} noValidate>
-          <div><h1>Create account</h1><p className="muted mt8">Start modelling and stress-testing your architectures.</p></div>
+          <div><h1>Create your account</h1><p className="muted mt8">Model an architecture and run your first failure simulation in minutes.</p></div>
           <Field label="Full name" htmlFor="name" error={errors.full_name}><input id="name" className="input" autoComplete="name" value={form.full_name} onChange={(e) => set("full_name", e.target.value)} /></Field>
           <Field label="Email" htmlFor="remail" error={errors.email}><input id="remail" className="input" type="email" autoComplete="email" value={form.email} onChange={(e) => set("email", e.target.value)} /></Field>
           <Field label="Password" htmlFor="rpw" error={errors.password} help="Min. 8 characters with letters and a digit"><input id="rpw" className="input" type="password" autoComplete="new-password" value={form.password} onChange={(e) => set("password", e.target.value)} /></Field>

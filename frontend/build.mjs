@@ -48,6 +48,8 @@ const options = {
   minify: !(dev || watch),
   sourcemap: dev || watch,
   define: { "process.env.NODE_ENV": JSON.stringify(dev || watch ? "development" : "production") },
+  loader: { ".woff": "file" },
+  assetNames: "fonts/[name]-[hash]",
   logLevel: "info",
 };
 

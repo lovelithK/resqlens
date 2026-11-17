@@ -4,7 +4,7 @@ import {
 } from "react-icons/lu";
 import { useApi } from "../lib/hooks";
 import { Link, navigate } from "../lib/router";
-import { ago, FAILURE_LABEL, STATUS_COLOR, scoreColor } from "../lib/format";
+import { ago, FAILURE_LABEL, sentence, STATUS_COLOR, scoreColor } from "../lib/format";
 import { Badge, Card, Empty, HealthBar, Loading, PageHeader, Stat, Callout } from "../components/ui";
 import { Donut, Gauge } from "../components/charts";
 
@@ -21,7 +21,7 @@ export function ActivityFeed({ items }: { items: any[] }) {
     <div className="timeline">
       {items.map((e) => (
         <div key={e.id} className={`tl-item ${eventLevel(e.event_type)}`}>
-          <div className="row" style={{ gap: 8 }}><span className="tl-type">{e.event_type.replace(/_/g, " ")}</span><span className="tl-time">{ago(e.created_at)}</span></div>
+          <div className="row" style={{ gap: 8 }}><span className="tl-type">{sentence(e.event_type)}</span><span className="tl-time">{ago(e.created_at)}</span></div>
           <div className="tl-msg">{e.message}</div>
           {e.project_name && <div className="faint xs">{e.project_name}</div>}
         </div>

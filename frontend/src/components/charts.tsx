@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { scoreColor } from "../lib/format";
 
-const AXIS = "#4f6080";
-const GRID = "#1c2a43";
+const AXIS = "#6f8d95";
+const GRID = "#21434f";
 
 export function Gauge({ value, size = 150, label, sub }: { value: number | null | undefined; size?: number; label?: string; sub?: string }) {
   const r = size / 2 - 12;
@@ -12,12 +12,12 @@ export function Gauge({ value, size = 150, label, sub }: { value: number | null 
   const color = scoreColor(value);
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="score-ring" role="img" aria-label={`${label || "score"} ${value ?? "n/a"}`}>
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#1a2a44" strokeWidth={10} />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#21434f" strokeWidth={10} />
       <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={10} strokeLinecap="round"
         strokeDasharray={`${(c * Math.max(0, Math.min(100, v))) / 100} ${c}`} transform={`rotate(-90 ${size / 2} ${size / 2})`}
         style={{ transition: "stroke-dasharray .5s ease" }} />
-      <text x="50%" y="48%" textAnchor="middle" fill="#e5ecf6" fontSize={size / 4.6} fontWeight={650}>{value ?? "–"}</text>
-      {label && <text x="50%" y="66%" textAnchor="middle" fill="#7d8ea9" fontSize={11.5}>{label}</text>}
+      <text x="50%" y="48%" textAnchor="middle" fill="#e3edef" fontSize={size / 4.4} fontWeight={700} fontFamily="Adventor, Inter, sans-serif">{value ?? "–"}</text>
+      {label && <text x="50%" y="66%" textAnchor="middle" fill="#86a2a9" fontSize={11.5}>{label}</text>}
       {sub && <text x="50%" y="78%" textAnchor="middle" fill={color} fontSize={12} fontWeight={600}>{sub}</text>}
     </svg>
   );
@@ -30,8 +30,8 @@ export function Donut({ data, size = 150, center }: { data: { label: string; val
   let offset = 0;
   return (
     <div className="row" style={{ gap: 18, alignItems: "center", flexWrap: "wrap" }}>
-      <svg width={size} height={size} role="img" aria-label="distribution chart">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#1a2a44" strokeWidth={16} />
+      <svg width={size} height={size} role="img" aria-label="distribution chart" style={{ flex: "none" }}>
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#21434f" strokeWidth={16} />
         {total > 0 && data.filter((d) => d.value > 0).map((d) => {
           const len = (d.value / total) * c;
           const el = <circle key={d.label} cx={size / 2} cy={size / 2} r={r} fill="none" stroke={d.color} strokeWidth={16}
@@ -39,7 +39,7 @@ export function Donut({ data, size = 150, center }: { data: { label: string; val
           offset += len;
           return el;
         })}
-        <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fill="#e5ecf6" fontSize={22} fontWeight={650}>{center ?? total}</text>
+        <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fill="#e3edef" fontSize={24} fontWeight={700} fontFamily="Adventor, Inter, sans-serif">{center ?? total}</text>
       </svg>
       <div className="col" style={{ gap: 6 }}>
         {data.map((d) => (
@@ -90,9 +90,9 @@ export function BarChart({ data, height = 200, unit = "", horizontal = false, ma
         const maxChars = Math.max(6, Math.floor(slot / 6.2));
         return (
           <g key={i} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
-            <rect x={x} y={pad.t + ih - h} width={bw} height={Math.max(0, h)} rx={4} fill={d.color || "#3b82f6"} opacity={hover === null || hover === i ? 1 : 0.55} />
-            <text x={x + bw / 2} y={pad.t + ih - h - 5} textAnchor="middle" fill="#b6c3d8" fontSize={11} fontWeight={600}>{Math.round(d.value * 10) / 10}{unit}</text>
-            <text x={x + bw / 2} y={height - pad.b + 16} textAnchor="middle" fill="#7d8ea9" fontSize={10.5}>{d.label.length > maxChars ? d.label.slice(0, maxChars - 1) + "…" : d.label}</text>
+            <rect x={x} y={pad.t + ih - h} width={bw} height={Math.max(0, h)} rx={4} fill={d.color || "#a69bff"} opacity={hover === null || hover === i ? 1 : 0.55} />
+            <text x={x + bw / 2} y={pad.t + ih - h - 5} textAnchor="middle" fill="#b2c6cb" fontSize={11} fontWeight={600}>{Math.round(d.value * 10) / 10}{unit}</text>
+            <text x={x + bw / 2} y={height - pad.b + 16} textAnchor="middle" fill="#86a2a9" fontSize={10.5}>{d.label.length > maxChars ? d.label.slice(0, maxChars - 1) + "…" : d.label}</text>
             {d.note && <text x={x + bw / 2} y={height - pad.b + 30} textAnchor="middle" fill={AXIS} fontSize={9.5}>{d.note}</text>}
           </g>
         );

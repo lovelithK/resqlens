@@ -74,7 +74,7 @@ export default function WorkspacePage({ pid }: { pid: number }) {
             {MODULES.map(([slug, Icon, label, desc]) => (
               <div key={slug} className="card hoverable" style={{ cursor: "pointer" }} onClick={() => navigate(`/projects/${pid}/${slug}`)}>
                 <div className="card-body row" style={{ alignItems: "flex-start", gap: 12 }}>
-                  <div style={{ width: 34, height: 34, borderRadius: 8, background: "var(--accent-soft)", display: "grid", placeItems: "center", flex: "none" }}><Icon color="#93c5fd" /></div>
+                  <div style={{ width: 34, height: 34, borderRadius: 8, background: "var(--accent-soft)", display: "grid", placeItems: "center", flex: "none" }}><Icon color="var(--accent)" /></div>
                   <div><h3>{label}</h3><p className="muted small mt8" style={{ marginTop: 3 }}>{desc}</p></div>
                 </div>
               </div>
