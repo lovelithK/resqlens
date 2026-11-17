@@ -1,6 +1,6 @@
 """Add four sample architectures to ResQLens and run two failure simulations.
 
-Uses the running API (http://127.0.0.1:8000) as the demo account, exactly as the
+Uses the running API (http://127.0.0.1:8000, or the URL in RESQLENS_API) as the demo account, exactly as the
 web app would. Safe to re-run: projects that already exist are skipped, and a
 simulation is only run if its project has none yet.
 
@@ -10,12 +10,13 @@ Writes a summary to logs/sample_data_report.txt.
 from __future__ import annotations
 
 import json
+import os
 import sys
 import urllib.error
 import urllib.request
 from pathlib import Path
 
-API = "http://127.0.0.1:8000"
+API = os.environ.get("RESQLENS_API", "http://127.0.0.1:8000").rstrip("/")  # e.g. the live Render URL
 DEMO_EMAIL = "demo@resqlens.dev"
 DEMO_PASSWORD = "Demo@2026"  # public demo account created by app.seed, not a real secret
 

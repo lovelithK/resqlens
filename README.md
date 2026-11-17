@@ -4,6 +4,10 @@ ResQLens is a full-stack web application for modelling a software system's archi
 
 > **Simulation only.** ResQLens never connects to or runs commands on real infrastructure. Every failure, status, score and recovery time is computed by documented, rule-based algorithms over *your modelled architecture*. No randomness, no machine learning and no AI-generated reasoning are used.
 
+**Live demo:** https://resqlens-2hym.onrender.com (sign in with `demo@resqlens.dev` / `Demo@2026`). It runs on Render's free plan, so the first visit after 15 idle minutes takes about 50 seconds while the server wakes up.
+
+![ResQLens sign-in screen](docs/screenshots/sign-in.png)
+
 ![Architecture](docs/diagrams/architecture.png)
 
 ---
@@ -95,7 +99,10 @@ npm run typecheck    # TypeScript type-check
 - Backup: `database\backup.bat`.
 
 ### Deployment
-Docker image, Docker Compose (app + MySQL) and free-tier hosting options: **[deployment/DEPLOYMENT.md](deployment/DEPLOYMENT.md)**.
+The live demo runs on **Render** (Docker web service) with a free **TiDB Cloud Starter** MySQL-compatible database, so data is kept across restarts. Setup steps, the Docker image, Docker Compose (app + MySQL) and other hosting options: **[deployment/DEPLOYMENT.md](deployment/DEPLOYMENT.md)**.
+
+### Sample data
+`add_projects_and_commit.bat` (Windows) or `python tools/add_sample_projects.py` adds four more sample architectures through the API: an e-commerce checkout platform, a hospital patient records system, a food delivery app and an online banking portal. It also runs two example simulations. All values are simulated, and running it again doesn't create duplicates.
 
 ## Demo walkthrough
 The seeded **University Examination Management System** has 15 components, 20 dependencies (13 mandatory, 7 optional, and 2 protected by a configured read replica), 6 functionalities (3 critical) and 4 predefined scenarios.
@@ -201,9 +208,23 @@ There are **37 tests**:
 ## Screenshots
 | | |
 |---|---|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Architecture builder](docs/screenshots/architecture-builder.png) |
-| ![Simulation running](docs/screenshots/simulation-running.png) | ![Impact analysis](docs/screenshots/impact-analysis.png) |
-| ![Root cause](docs/screenshots/root-cause.png) | ![Recovery planner](docs/screenshots/recovery-planner.png) |
-| ![Recovery execution](docs/screenshots/recovery-execution.png) | ![Resilience](docs/screenshots/resilience.png) |
+| ![Sign in](docs/screenshots/sign-in.png) | ![Dashboard](docs/screenshots/dashboard.png) |
+| ![Architecture builder](docs/screenshots/architecture-builder.png) | ![Simulation running](docs/screenshots/simulation-running.png) |
+| ![Impact analysis](docs/screenshots/impact-analysis.png) | ![Root cause](docs/screenshots/root-cause.png) |
+| ![Recovery planner](docs/screenshots/recovery-planner.png) | ![Recovery execution](docs/screenshots/recovery-execution.png) |
+| ![Resilience](docs/screenshots/resilience.png) | ![What-if comparison](docs/screenshots/what-if.png) |
+
+## Visual design – "Harbour & Lens"
+The interface uses a dark petrol-teal base, a lens-violet brand accent and five status colours that never overlap with the accent. Every text colour meets WCAG AA contrast on its background.
+
+| Role | Colour |
+|---|---|
+| Background · panels | `#0F2229` · `#15303A` · `#1A3843` |
+| Text · secondary · muted | `#E3EDEF` · `#B2C6CB` · `#86A2A9` |
+| Brand accent (buttons, active navigation, recovery path) | `#A69BFF` |
+| Healthy · Degraded · Failed · Blocked · Recovering | `#3FD49A` · `#F4B740` · `#FF6B66` · `#FF8C42` · `#5BB8F5` |
+| Chart series | `#A69BFF` · `#5BB8F5` · `#E0C38C` · `#E58FB8` |
+
+Typography: **TeX Gyre Adventor** (GUST Font License) for headings, numbers and the logo, and **Inter** (SIL OFL) for interface text. Both are bundled as WOFF files in `frontend/src/fonts/` with their licences, so there are no external font requests. The sign-in page's animated lens, which shows a failure spreading through a small dependency graph and then recovering, is the one decorative motion, and it switches off when the user prefers reduced motion.
 
 A sample generated PDF report is in [`docs/sample-report.pdf`](docs/sample-report.pdf).
